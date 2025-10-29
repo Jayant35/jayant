@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultrasonic Sensor Distance Monitor</title>
+  <style>
+    body {
+      background: #f4f6f8;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #333;
+    }
+    .card {
+      display: inline-block;
+      background: white;
+      padding: 30px 50px;
+      margin-top: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .distance {
+      font-size: 48px;
+      font-weight: bold;
+      color: #0078d7;
+    }
+    .unit {
+      font-size: 24px;
+      color: #666;
+    }
+    footer {
+      margin-top: 40px;
+      color: #888;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ultrasonic Sensor Distance Monitor</h1>
+  <div class="card">
+    <div class="distance" id="distance">--</div>
+    <div class="unit">cm</div>
+  </div>
+
+  <footer>Updated automatically every 2 seconds</footer>
+
+  <script>
+    async function getDistance() {
+      try {
+        const response = await fetch('/distance');  // ESP32 should serve data here
+        if (!response.ok) throw new Error("Network error");
+        const distance = await response.text();
+        document.getElementById('distance').textContent = distance.trim();
+      } catch (error) {
+        document.getElementById('distance').textContent = '--';
+        console.error("Fetch failed:", error);
+      }
+    }
+
+    // Update every 2 seconds
+    setInterval(getDistance, 2000);
+    getDistance();
+  </script>
+</body>
+</html>
